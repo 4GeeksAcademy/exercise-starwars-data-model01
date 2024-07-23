@@ -1,31 +1,60 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Date
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy import create_engine
 from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class User(Base):
+    __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    name = Column(String(50), nullable=False)
+    last_name = Column(String(50), nullable=False)
+    email = Column(String(100), nullable=False)
+    password  = Column(String(30), nullable=False)
+    date_of_suscription = Column(Date, nullable=False)
+    favorites = relationship('Favorites', backref='favorites', lazy=True)
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
+
+class Favorites(Base):
+    __tablename__ = 'favorites'
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    planet_id = Column(Integer, ForeignKey('planet.id'))
+    vehicle_id = Column(Integer, ForeignKey('vehicle.id'))
+    character_id = Column(Integer, ForeignKey('character.id'))
+    user = relationship(User)
 
-    def to_dict(self):
+class Planet(Base):
+    __tablename__ = 'planet'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(80), nullable=False)
+    population = Column(String(50), nullable=False)
+    diameter = Column(String(50), nullable=False)
+    favorite = relationship(Favorites)
+
+class Vehicle(Base):
+    __tablename__ = 'vehicle'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(80), nullable=False)
+    model = Column(String(50), nullable=False)
+    size = Column(String(50), nullable=False)
+    favorites = relationship(Favorites)
+
+class Character(Base):
+    __tablename__ = 'character'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(80), nullable=False)
+    gender = Column(String(50), nullable=False)
+    eye_color = Column(String(50), nullable=False)
+    favorites = relationship(Favorites)
+
+
+
+
+def to_dict(self):
         return {}
 
 ## Draw from SQLAlchemy base

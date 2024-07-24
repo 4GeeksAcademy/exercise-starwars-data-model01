@@ -25,15 +25,14 @@ class Favorites(Base):
     planet_id = Column(Integer, ForeignKey('planet.id'))
     vehicle_id = Column(Integer, ForeignKey('vehicle.id'))
     character_id = Column(Integer, ForeignKey('character.id'))
-    user = relationship(User)
-
+    
 class Planet(Base):
     __tablename__ = 'planet'
     id = Column(Integer, primary_key=True)
     name = Column(String(80), nullable=False)
     population = Column(String(50), nullable=False)
     diameter = Column(String(50), nullable=False)
-    favorite = relationship(Favorites)
+    favorite = relationship('Favorites', backref='favorites', lazy=True)
 
 class Vehicle(Base):
     __tablename__ = 'vehicle'
@@ -41,7 +40,7 @@ class Vehicle(Base):
     name = Column(String(80), nullable=False)
     model = Column(String(50), nullable=False)
     size = Column(String(50), nullable=False)
-    favorites = relationship(Favorites)
+    favorites = relationship('Favorites', backref='favorites', lazy=True)
 
 class Character(Base):
     __tablename__ = 'character'
@@ -49,10 +48,7 @@ class Character(Base):
     name = Column(String(80), nullable=False)
     gender = Column(String(50), nullable=False)
     eye_color = Column(String(50), nullable=False)
-    favorites = relationship(Favorites)
-
-
-
+    favorites = relationship('Favorites', backref='favorites', lazy=True)
 
 def to_dict(self):
         return {}
